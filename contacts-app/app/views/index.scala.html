@@ -1,0 +1,49 @@
+@(message: String)
+
+@main("My Contacts App") {
+    <div>
+		<h2>Add a new contact</h2>
+	    <form action="@routes.AppController.addPerson()" method="post" id="contactForm">
+			<table>
+				<tr>
+					<td>First Name:</td>
+					<td>
+						<input type="text" name="firstName" class="builder-input" ng-model="persons[selectedObjectIndex].firstName"/>
+					</td>
+	    		</tr>
+				<tr></tr>
+				<tr>
+					<td>Last Name:</td>
+					<td><input type="text" name="lastName" class="builder-input" ng-model="persons[selectedObjectIndex].lastName"/></td>
+				</tr>
+				<tr></tr>
+				<tr>
+					<td>Email:</td>
+					<td><input type="text" name="email" class="builder-input" ng-model="persons[selectedObjectIndex].email" /></td>
+				</tr>
+			</table>
+			<br />
+	    	<button id="add">Add Person</button>
+	    </form>
+    </div>
+	<br />
+    <hr />
+	
+	<h2>{{ message }}</h2>
+
+	<div ng-show="persons.length == 0">New here? Start adding contacts now.</div>
+
+	<table style="width:100%" class="contacts">
+		<tbody>
+			<tr ng-repeat="person in persons" ng-class="{'selected-object': $index == selectedObjectIndex}">
+				<td class="badge">{{ $index+1 }}.</td>
+				<td ng-model="firstName">{{ person.firstName }}</td>
+				<td ng-model="lastName">{{ person.lastName }}</td>
+				<td ng-model="email">{{ person.email }}</td>
+				<td>
+					<input type="button" value="Delete" ng-click="deletePerson(person)" />
+				</td>
+			</tr>
+		</tbody>
+	</table>
+}
