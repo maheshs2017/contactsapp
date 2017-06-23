@@ -6,8 +6,6 @@ target
 /.project
 /.settings
 /RUNNING_PID
-/bin/
-bin/
 /db
 .eclipse
 /lib/
