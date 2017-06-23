@@ -51,26 +51,19 @@ public class AppController extends Controller {
     	
     	Person person = (Person) form.get();
     	
-    	System.out.println("deletePerson form: "+person);
 
     	ObjectId id = new ObjectId(person.getId());
     	Query<Person> deleteQuery = datastore.createQuery(Person.class).filter("_id = ", id);
     	deleteQuery.disableValidation();
-    	System.out.println("deleteQuery: "+deleteQuery);
     	Person dbPerson = deleteQuery.get();
-    	System.out.println("dbPerson: " + dbPerson);
     	
-    	System.out.println(id);
     	WriteResult result = datastore.delete(deleteQuery);
-    	System.out.println(result);
     	
       	return redirect(routes.AppController.index());
     }
     
     public Result getPersons() {
-    	System.out.println("getPersons: "+query);
     	List<Person> persons = query.asList(); 
-    	System.out.println(persons);
     	return ok(toJson(persons));
     }
     

@@ -1,46 +1,103 @@
 @(message: String)
 
 @main("My Contacts App") {
-    <div>
-		<h2>Add a new contact</h2>
+	<h1 align="center">My Contacts App</h1>
+
+	<div ng-show="persons.length == 0"><h3>New here? Add your contacts now.</h3><br/></div>
+
+    <div class="check-element" ng-show="displayAddPerson || persons.length == 0">
+
 	    <form action="@routes.AppController.addPerson()" method="post" id="contactForm">
 			<table>
-				<tr>
-					<td>First Name:</td>
-					<td>
-						<input type="text" name="firstName" class="builder-input" ng-model="persons[selectedObjectIndex].firstName"/>
-					</td>
-	    		</tr>
-				<tr></tr>
-				<tr>
-					<td>Last Name:</td>
-					<td><input type="text" name="lastName" class="builder-input" ng-model="persons[selectedObjectIndex].lastName"/></td>
-				</tr>
-				<tr></tr>
-				<tr>
-					<td>Email:</td>
-					<td><input type="text" name="email" class="builder-input" ng-model="persons[selectedObjectIndex].email" /></td>
-				</tr>
+				<thead>
+					<tr>
+						<th colspan=2><h3 ng-hide="persons.length == 0" align="center">Add a new contact</h3></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>First Name:</td>
+						<td>
+							<input type="text" name="firstName" class="builder-input" ng-model="persons[selectedObjectIndex].firstName" required/>
+						</td>
+		    		</tr>
+					<tr></tr>
+					<tr>
+						<td>Last Name:</td>
+						<td><input type="text" name="lastName" class="builder-input" ng-model="persons[selectedObjectIndex].lastName" required/></td>
+					</tr>
+					<tr></tr>
+					<tr>
+						<td>Email:</td>
+						<td><input type="email" name="email" class="builder-input" ng-model="persons[selectedObjectIndex].email" size="30" required/></td>
+					</tr>
+					<tr>
+						<td />
+					</tr>
+					<tr>
+						<td align="center"><button>Add Person</button></td>
+						<td align="center"><button type="button" ng-click="displayAddPerson = false" ng-hide="persons.length == 0" >Cancel</button></td>
+					</tr>
+				</tbody>
 			</table>
 			<br />
-	    	<button id="add">Add Person</button>
 	    </form>
     </div>
-	<br />
-    <hr />
-	
-	<h2>{{ message }}</h2>
+	 
+	<span ng-hide="persons.length == 0">
+		<table width="100%">
+			<tr>
+				<td width="15%"><h2>{{ message }}</h2></td>
+				<td width="85%"><button ng-click="displayAddPerson = true" ng-hide="displayAddPerson">Add New Contact</button></td>
+			</tr>
+		</table>
+	</span>
+	<br>
+	<form ng-hide="persons.length == 0">
+		<div class="form-group">
+			<div class="input-group">
+				<div class="input-group-addon"><i class="fa fa-search"></i></div>
+				<input type="text" class="form-control" placeholder="Search" ng-model="query" width="20">
+			</div>      
+		</div>
+	</form>
 
-	<div ng-show="persons.length == 0">New here? Start adding contacts now.</div>
+	<table class="table table-bordered table-striped" ng-hide="persons.length == 0">
+		<thead>
+			<tr>
+				<th width="50px">No.</th>
+				<th nowrap>
+					<a href="#" ng-click="sortType = 'firstName'; sortReverse = !sortReverse">
+						First Name
+						<span ng-show="sortType == 'firstName' && !sortReverse" class="fa fa-caret-down"></span>
+            			<span ng-show="sortType == 'firstName' && sortReverse" class="fa fa-caret-up"></span>
+					</a>
+				</th>
+				<th nowrap>
+					<a href="#" ng-click="sortType = 'lastName'; sortReverse = !sortReverse">
+						Last Name
+						<span ng-show="sortType == 'lastName' && !sortReverse" class="fa fa-caret-down"></span>
+            			<span ng-show="sortType == 'lastName' && sortReverse" class="fa fa-caret-up"></span>
+					</a>
 
-	<table style="width:100%" class="contacts">
+				</th>
+				<th nowrap>
+					<a href="#" ng-click="sortType = 'email'; sortReverse = !sortReverse">
+						Email
+						<span ng-show="sortType == 'email' && !sortReverse" class="fa fa-caret-down"></span>
+            			<span ng-show="sortType == 'email' && sortReverse" class="fa fa-caret-up"></span>
+					</a>
+				</th>
+				<th width="100px"/>
+			</tr>
+		</thead>
 		<tbody>
-			<tr ng-repeat="person in persons" ng-class="{'selected-object': $index == selectedObjectIndex}">
-				<td class="badge">{{ $index+1 }}.</td>
-				<td ng-model="firstName">{{ person.firstName }}</td>
-				<td ng-model="lastName">{{ person.lastName }}</td>
-				<td ng-model="email">{{ person.email }}</td>
-				<td>
+			<tr ng-repeat="person in persons | orderBy:sortType:sortReverse | filter:search">
+				<td>{{ $index+1 }}.</td>
+				<td>{{ person.firstName }}</td>
+				<td>{{ person.lastName }}</td>
+				<td>{{ person.email }}</td>
+				<td align="center">
 					<input type="button" value="Delete" ng-click="deletePerson(person)" />
 				</td>
 			</tr>
